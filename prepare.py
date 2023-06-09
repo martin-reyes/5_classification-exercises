@@ -1,8 +1,9 @@
-import acquire
+import acquire as a
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
 
-def prep_iris(iris=acquire.get_iris_data()):
+def prep_iris(iris=a.get_iris_data()):
     '''
     accepts the raw iris data
     returns the data with the transformations above applied
@@ -20,13 +21,13 @@ def prep_iris(iris=acquire.get_iris_data()):
     return iris
 
 
-def prep_titanic(titanic=acquire.get_titanic_data()):
+def prep_titanic(titanic=a.get_titanic_data()):
     '''
     accepts the raw titanic data
     returns the data with the transformations above applied
     '''
     # dropping embarked column
-    cols_to_drop = ['embarked','pclass']
+    cols_to_drop = ['embarked','pclass','deck']
     titanic = titanic.drop(columns=cols_to_drop)
     
     # Encode the categorical columns.
@@ -38,13 +39,18 @@ def prep_titanic(titanic=acquire.get_titanic_data()):
     return titanic
 
 
-def prep_telco(telco=acquire.get_telco_data()):
+def prep_telco(telco=a.get_telco_data()):
     '''
     accepts the raw telco data
     returns the data with the transformations above applied
     '''
     # Dropping foreign keys
     telco = telco.iloc[:,3:]
+    
+    # replace empty space with np.nan and convert column to float
+    telco['total_charges'] = telco['total_charges'].replace(' ', np.nan).astype(float)
+    # impute median
+    telco['total_charges'] = telco['total_charges'].fillna(telco['total_charges'].median())
     
     # Encoding binary variables
     binary_cols = ['partner','dependents','phone_service', 'paperless_billing', 'churn']
