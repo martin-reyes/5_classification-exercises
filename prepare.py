@@ -39,13 +39,13 @@ def prep_titanic(titanic=a.get_titanic_data()):
     return titanic
 
 
-def prep_telco(telco=a.get_telco_data()):
+def prep_telco(telco_raw=a.get_telco_data()):
     '''
-    accepts the raw telco data
-    returns the data with the transformations above applied
+    Accepts the raw telco data
+    Returns the data with the transformations above applied
     '''
     # Dropping foreign keys
-    telco = telco.iloc[:,3:]
+    telco = telco_raw.iloc[:,3:]
     
     # replace empty space with np.nan and convert column to float
     telco['total_charges'] = telco['total_charges'].replace(' ', np.nan).astype(float)
